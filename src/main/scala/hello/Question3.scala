@@ -10,11 +10,9 @@ object calculateStatisticsForEachDay {
     // all transactions for date range, grouped by accountID
     val allTransactionsByAccountID = ts
       .filter(trans =>
-        trans.transactionDay > day - 5 && trans.transactionDay < day + 1
+        trans.transactionDay >= day - 4 && trans.transactionDay < day + 1
       )
       .groupBy(_.accountId);
-
-    println("allTransactionsByAccountID", day, allTransactionsByAccountID)
 
     // "AA" transactions summered by account id
     val aaSums = allTransactionsByAccountID
@@ -56,7 +54,6 @@ object calculateStatisticsForEachDay {
   def main(args: Array[String]): Unit = {
     val transactions = getTransaction.transactions;
     val days = transactions.map(_.transactionDay).distinct.sorted
-
     days.foreach { day =>
       val stats = calcStats(transactions, day).toSeq
       stats.foreach { case (id, (maxim, average, aaSums, ccSums, ffSums)) =>
